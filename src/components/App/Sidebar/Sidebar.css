@@ -1,0 +1,19 @@
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	border: 2px solid #6bffef;
+	padding: 20px;
+	border-radius: 5px;
+}
+
+.field {
+	height: 30px;
+	text-align: center;
+	padding-top: 5px;
+	box-shadow: 2px 2px 10px 0 #1bc4b5;
+	cursor: pointer;
+}
+
+.field:first-child {
+	margin-bottom: 15px;
+}
