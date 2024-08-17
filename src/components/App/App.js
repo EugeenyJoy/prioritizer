@@ -41,7 +41,6 @@ function App() {
   const toggleTodo = (id) => {
     console.log('toggleTodo');
     let value = localStorage.getItem(id);
-      console.log('item: ', value);
     if (value && typeof value === 'string') {
       let start = value.substring(0, value.lastIndexOf('|'));
   
@@ -102,7 +101,7 @@ function App() {
         <Sidebar rates={todos}/>
       </div> 
       <div className='container'>
-        <h1 className='title'>TodoList</h1>
+        <h1 className='title'>Todo List</h1>
         <Form 
           putTodo={putTodo}
         />

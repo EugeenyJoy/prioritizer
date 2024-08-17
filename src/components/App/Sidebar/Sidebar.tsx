@@ -2,20 +2,22 @@ import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 
-    /* функция рамномного выбора 2 сущностей из массива  и копирование в другой */
-    const getRandomObjects = (sourceArray, count) => {
-      const randomObjects = [];
-      const sourceCopy = sourceArray.filter(obj => obj.done === false);
+/* функция случайного выбора 2 сущностей из массива  и копирование в другой */
+const getRandomObjects = (sourceArray, count) => {
+  const randomObjects = [];
+  const sourceCopy = sourceArray.filter(obj => obj.done === false);
 
-      for (let i = 0; i < count; i++) {
-        const randomIndex = Math.floor(Math.random() * sourceCopy.length); 
-        const randomObject = sourceCopy.splice(randomIndex, 1)[0];
-        randomObjects.push(randomObject);
-      }
-     
-      return randomObjects;
-   
-    };
+  for (let i = 0; i < count; i++) {
+    const randomIndex = Math.floor(Math.random() * sourceCopy.length); 
+    const randomObject = sourceCopy.splice(randomIndex, 1)[0];
+    randomObjects.push(randomObject);
+  }
+  
+  return randomObjects;
+
+};
+
+const selectedIds = []; // Массив для хранения выбранных id
 
 const Sidebar = (props) => { 
 
@@ -24,10 +26,11 @@ const Sidebar = (props) => {
   useEffect(() => {
     // Инициализация состояния из props
     setRates(props.rates);
+    console.log('props.rates1: ',props.rates);
   }, [props.rates]);
 
   /* функция установки рейтинга для сущности */ 
-  const setRate = (id) => {
+  const setRate = (id, selectedIds) => {
     console.log('setRate');
     let value = localStorage.getItem(id);
     if (value && typeof value === 'string') {
@@ -36,6 +39,21 @@ const Sidebar = (props) => {
       let done = value.split('|')[2];
       
       localStorage.setItem(id ,  `${text}|${+rate+1}|${done}`);  
+
+      for (let selected of selectedIds ) {
+        if( selected != id) {
+          let value2 = localStorage.getItem(selected);
+          let text2 = value2.split('|')[0];
+          let rate2 = value2.split('|')[1];
+          let done2 = value2.split('|')[2];
+          if(parseInt(rate2) > 0) {
+            console.log('sel: ',selected);
+            console.log('getItem: ',text2, rate2, done2);
+            localStorage.setItem(selected ,  `${text2}|${+rate2-1}|${done2}`);
+          }
+          
+        }
+      }
 
       // Обновляем состояние
       setRates(prevRates => 
@@ -50,7 +68,8 @@ const Sidebar = (props) => {
   if (typeof props.rates[0] == 'undefined' || typeof props.rates[1] == 'undefined') {
     return null; // Если пропсы не переданы, ничего не рендерим
   }
-    
+  const selectedIds = []; // Массив для хранения выбранных id
+
 	return (  
 		<div className='sidebar' >
       {
@@ -58,12 +77,18 @@ const Sidebar = (props) => {
           <div className='alternative-block'>
             <p>Не достаточно открытых задач.</p>
           </div>
-        ) : getRandomObjects(props.rates, 2).map(prop => { console.log('this prop: ', prop); console.log('is undef?: ', prop !== undefined);
+        ) : getRandomObjects(props.rates, 2).map(prop => { 
           if (prop === undefined) {
             return;
           } else {
+            selectedIds.push(prop.id);
             return (
-              <div className='field' key={prop.id} onClick={() => setRate(prop.id)} >
+              <div className='field' key={prop.id} onClick={() => {
+                  setRate(prop.id, selectedIds);
+                  selectedIds.length = 0; // Очищаем массив после передачи
+                  
+                  }
+                } >
                 {prop.text}
               </div>
             );
