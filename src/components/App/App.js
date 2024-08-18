@@ -96,38 +96,51 @@ function App() {
   todos.sort((a, b) => b.rate - a.rate);
 
   return (
+    <>
     <div className='wrapper'>
-      <div className='container'>
-        <Sidebar rates={todos}/>
-      </div> 
-      <div className='container'>
-        <h1 className='title'>Todo List</h1>
-        <Form 
-          putTodo={putTodo}
-        />
-        <ul className='todos'>
-          {
-            todos.map(todo => { 
-              return (
-                <li className={todo.done === true ? "todo done" : "todo"} key={todo.id} onClick={() => toggleTodo(todo.id)} >
-                  {todo.text}
-                  <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
-                    e.stopPropagation();
-                    removeTodo(todo.id);
-                  }
-                  } />
-                </li>
-              );
-            })
+      <div className='content-wrapper'>
+        <div className='container'>
+          <Sidebar rates={todos}/>
+        </div> 
+        <div className='container'>
+          <h1 className='title'>Todo List</h1>
+          <Form 
+            putTodo={putTodo}
+          />
+          {(todos.length > 0) ? (<div className='btn-container'>
+            <button className='btn' onClick={clearTodos}>Очистить всё</button>
+          </div>) : ''
           }
-          <div className='info'>
-            <span>All todos: {allTodos} </span>
-            <span>Complete: {allComplete} </span>
-          </div>
-          <button className='btn' onClick={clearTodos}>Clear All</button>
-        </ul>
+          
+          <ul className='todos'>
+            {
+              todos.map(todo => { 
+                return (
+                  <li className={todo.done === true ? "field todo done" : "field todo"} key={todo.id} onClick={() => toggleTodo(todo.id)} >
+                    <div className={'todoText'}> {todo.text} </div>
+                    <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
+                      e.stopPropagation();
+                      removeTodo(todo.id);
+                    }
+                    } />
+                  </li>
+                );
+              })
+            }
+            <div className='info field'>
+              <span>Всего: {allTodos} </span>
+              <span>Выполнено: {allComplete} </span>
+            </div>
+          </ul>
+        </div>
       </div>
     </div>
+    <footer> 
+      <div className='container'><span>20.08.2024 </span>
+        <a href='https://eugeenyjoy.ru/'> EugeenyJoy</a> 
+      </div>
+    </footer>
+    </>
   );
 }
 

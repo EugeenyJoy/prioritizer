@@ -72,6 +72,7 @@ const Sidebar = (props) => {
 
 	return (  
 		<div className='sidebar' >
+      <h3>Выбрать приоритет</h3>
       {
         getRandomObjects(props.rates, 2).some(prop => prop === undefined) ? (
           <div className='alternative-block'>
@@ -89,7 +90,7 @@ const Sidebar = (props) => {
                   
                   }
                 } >
-                {prop.text}
+                <div className='todoText'>{prop.text}</div>
               </div>
             );
           }

@@ -3,7 +3,7 @@ import './Form.css';
 import { useState } from 'react';
 
 const Form = (props) => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<number | string>('');
 
     return (
         <form className='form' onSubmit={e => {
@@ -12,7 +12,7 @@ const Form = (props) => {
                 setValue("");
             }
         }>
-            <input type='text' placeholder='Введите текст ...' className='input' value={value} onChange={e => setValue(e.target.value)} />
+            <input type='text' maxLength={45} placeholder='Введите текст ...' className='input' value={value} onChange={e => setValue(e.target.value)} />
 
         </form>
     );

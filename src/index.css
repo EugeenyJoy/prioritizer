@@ -1,9 +1,11 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: #99FF33;
+  background-image: url('./assets/background.jpg');
 }
 
 * {
   box-sizing: border-box;
-  color: #1bc4b5;
+  color: #99FF33;
 }
