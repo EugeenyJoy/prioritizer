@@ -26,7 +26,6 @@ const Sidebar = (props) => {
   useEffect(() => {
     // Инициализация состояния из props
     setRates(props.rates);
-    console.log('props.rates1: ',props.rates);
   }, [props.rates]);
 
   /* функция установки рейтинга для сущности */ 
@@ -41,14 +40,12 @@ const Sidebar = (props) => {
       localStorage.setItem(id ,  `${text}|${+rate+1}|${done}`);  
 
       for (let selected of selectedIds ) {
-        if( selected != id) {
+        if( selected !== id) {
           let value2 = localStorage.getItem(selected);
           let text2 = value2.split('|')[0];
           let rate2 = value2.split('|')[1];
           let done2 = value2.split('|')[2];
           if(parseInt(rate2) > 0) {
-            console.log('sel: ',selected);
-            console.log('getItem: ',text2, rate2, done2);
             localStorage.setItem(selected ,  `${text2}|${+rate2-1}|${done2}`);
           }
           
@@ -94,7 +91,6 @@ const Sidebar = (props) => {
               </div>
             );
           }
-        
         })
       }
 		</div>

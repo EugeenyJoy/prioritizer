@@ -7,6 +7,7 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [allTodos, setAllTodos] = useState(0);
   const [allComplete, SetAllComplete] = useState(0);
+  const [isMouseDown, setIsMouseDown] = useState(false);
 
   useEffect(() => {
     SetAllComplete(todos.filter(todo => todo.done === true).length);
@@ -40,25 +41,27 @@ function App() {
 
   const toggleTodo = (id) => {
     console.log('toggleTodo');
-    let value = localStorage.getItem(id);
-    if (value && typeof value === 'string') {
-      let start = value.substring(0, value.lastIndexOf('|'));
-  
-      // Получить часть после последнего "|"
-      let end = (value.substring(value.lastIndexOf('|') + 1));
-      let newEnd = false ;
-      if (end === 'true') {newEnd = false;} else {newEnd = true;}
-      
-      localStorage.setItem(id , start + '|' + newEnd);  
-  
-      setTodos(todos.map(todo => {
-        if (todo.id !== id) return todo;
-  
-        return {
-          ...todo,
-          done: !todo.done
-        }
-      }))
+    if (!isMouseDown) {
+      let value = localStorage.getItem(id);
+      if (value && typeof value === 'string') {
+        let start = value.substring(0, value.lastIndexOf('|'));
+    
+        // Получить часть после последнего "|"
+        let end = (value.substring(value.lastIndexOf('|') + 1));
+        let newEnd = false ;
+        if (end === 'true') {newEnd = false;} else {newEnd = true;}
+        
+        localStorage.setItem(id , start + '|' + newEnd);  
+    
+        setTodos(todos.map(todo => {
+          if (todo.id !== id) return todo;
+    
+          return {
+            ...todo,
+            done: !todo.done
+          }
+        }))
+      }
     }
   }
   
@@ -95,6 +98,38 @@ function App() {
 
   todos.sort((a, b) => b.rate - a.rate);
 
+  let isHolding = false;
+  let holdTimer;
+
+const handleMouseDown = () => {
+  holdTimer = setTimeout(() => {
+      isHolding = true;
+  }, 1000); // 1 секунда
+};
+
+const handleMouseUp = (e, id) => {
+  clearTimeout(holdTimer);
+  if (isHolding) {
+    e.currentTarget.nextElementSibling.classList.remove("hidden");
+  } else {
+    e.stopPropagation();
+      toggleTodo(id);
+  }
+  isHolding = false; // Сбрасываем флаг
+};
+
+const handleInputChange = (id, newValue) => {
+  setTodos(todos.map(todo => 
+    todo.id === id ? { ...todo, text: newValue } : todo
+  ));
+};
+
+const handleKeyDown = (e, id) => {
+  if (e.key === 'Enter') {
+    e.currentTarget.classList.add('hidden');
+  }
+};
+
   return (
     <>
     <div className='wrapper'>
@@ -116,14 +151,22 @@ function App() {
             {
               todos.map(todo => { 
                 return (
-                  <li className={todo.done === true ? "field todo done" : "field todo"} key={todo.id} onClick={() => toggleTodo(todo.id)} >
-                    <div className={'todoText'}> {todo.text} </div>
-                    <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
-                      e.stopPropagation();
-                      removeTodo(todo.id);
-                    }
-                    } />
-                  </li>
+                  <div key={todo.id} style={{width: '100%'}}>
+                    <li className={todo.done === true ? "field todo done" : "field todo"}  
+                    onMouseDown={handleMouseDown} onMouseUp={(e) => handleMouseUp(e,todo.id)} 
+                    /*onClick={() => toggleTodo(todo.id)} */>
+                      <div className={'todoText'}> {todo.text} </div>
+                      <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
+                        e.stopPropagation();
+                        removeTodo(todo.id);
+                      }
+                      } />
+                    </li>
+                    <input type='text'  maxLength={45} className={`todoInput field hidden`} value={todo.text} 
+                      onClick={e => {e.stopPropagation();}}
+                      onChange={e => handleInputChange(todo.id, e.target.value)} 
+                      onKeyDown={e => handleKeyDown(e, todo.id)} />
+                  </div>
                 );
               })
             }
