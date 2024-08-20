@@ -22,6 +22,7 @@ const selectedIds = []; // Массив для хранения выбранны
 const Sidebar = (props) => { 
 
   const [rates, setRates] = useState([]);
+  const [randomObjects, setRandomObjects] = useState(getRandomObjects(props.rates, 2));
 
   useEffect(() => {
     // Инициализация состояния из props
@@ -46,7 +47,7 @@ const Sidebar = (props) => {
           let rate2 = value2.split('|')[1];
           let done2 = value2.split('|')[2];
           if(parseInt(rate2) > 0) {
-            localStorage.setItem(selected ,  `${text2}|${+rate2-1}|${done2}`);
+            localStorage.setItem(selected ,  `${text2}|${+rate2-0.3}|${done2}`);
           }
           
         }
@@ -62,6 +63,11 @@ const Sidebar = (props) => {
     }
   }
 
+  const handleReload = () => {
+    const newRandomObjects = getRandomObjects(props.rates, 2);
+    setRandomObjects(newRandomObjects); // Обновляем состояние с новыми случайными объектами
+};
+
   if (typeof props.rates[0] == 'undefined' || typeof props.rates[1] == 'undefined') {
     return null; // Если пропсы не переданы, ничего не рендерим
   }
@@ -69,7 +75,10 @@ const Sidebar = (props) => {
 
 	return (  
 		<div className='sidebar' >
-      <h3>Выбрать приоритет</h3>
+      <div className='priorHeader'>
+        <h3>Выбрать приоритет</h3>
+        <span className='reload' onClick={handleReload}>&#x21bb;</span>
+      </div>
       {
         getRandomObjects(props.rates, 2).some(prop => prop === undefined) ? (
           <div className='alternative-block'>

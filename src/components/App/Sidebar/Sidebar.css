@@ -15,3 +15,15 @@
 .field:first-child {
 	margin-bottom: 15px;
 }
+
+.priorHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+}
+
+.reload {
+	cursor: pointer;
+	font-size: 30px;
+}
