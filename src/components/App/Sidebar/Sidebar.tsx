@@ -25,9 +25,15 @@ const Sidebar = (props) => {
   const [randomObjects, setRandomObjects] = useState(getRandomObjects(props.rates, 2));
 
   useEffect(() => {
-    // Инициализация состояния из props
-    setRates(props.rates);
-  }, [props.rates]);
+    const initialRates = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      const value = localStorage.getItem(key);
+      const [text, rate, done] = value.split('|');
+      initialRates.push({ id: key, text, rate: parseFloat(rate), done: done === 'true' });
+    }
+    setRates(initialRates);
+  }, []);
 
   /* функция установки рейтинга для сущности */ 
   const setRate = (id, selectedIds) => {
@@ -39,7 +45,7 @@ const Sidebar = (props) => {
       let done = value.split('|')[2];
       
       localStorage.setItem(id ,  `${text}|${+rate+1}|${done}`);  
-
+      let selectedIds2 = [...selectedIds];
       for (let selected of selectedIds ) {
         if( selected !== id) {
           let value2 = localStorage.getItem(selected);
@@ -53,13 +59,20 @@ const Sidebar = (props) => {
         }
       }
 
-      // Обновляем состояние
-      setRates(prevRates => 
-        prevRates.map(rate => 
-          rate.id === id ? { ...rate, rate: +rate + 1 } : rate
-        )
-      );
-
+      const updatedRates = props.rates.map(rate => {
+        if (rate.id === id) {
+          return { ...rate, rate: +rate.rate + 1 }; // Обновляем текущий элемент
+        }
+        
+        if (selectedIds2.includes(rate.id)) {
+          let newRate = parseFloat(rate.rate) - 0.3;
+          return { ...rate, rate: newRate < 0 ? 0 : newRate }; // Не даем значению стать отрицательным
+        }
+        return rate; // Возвращаем остальные элементы без изменений
+      });
+  
+      console.log('Обновленные rates:', updatedRates);
+      props.updateTodos(updatedRates); // Обновляем родительский компонент
     }
   }
 
@@ -93,7 +106,6 @@ const Sidebar = (props) => {
               <div className='field' key={prop.id} onClick={() => {
                   setRate(prop.id, selectedIds);
                   selectedIds.length = 0; // Очищаем массив после передачи
-                  
                   }
                 } >
                 <div className='todoText'>{prop.text}</div>

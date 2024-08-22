@@ -10,6 +10,7 @@ function App() {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
   useEffect(() => {
+    console.log('Todos обновлены:', todos);
     SetAllComplete(todos.filter(todo => todo.done === true).length);
   },[todos])
 
@@ -17,7 +18,6 @@ function App() {
     console.log('putTodo');
     if (value) {
       let todoId = Date.now();
-      
       setAllTodos(allTodos + 1);
       let keys = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -31,7 +31,12 @@ function App() {
         return numberA - numberB;
       });
 
-      setTodos([...todos, {id: todoId, text: value, done: false, rate: todoId}]);
+      // setTodos([...todos, {id: todoId, text: value, done: false, rate: todoId}]);
+      setTodos(prevTodos => [
+        ...prevTodos,
+        { id: todoId, text: value, done: false, rate: 0 }
+      ]);
+
       localStorage.setItem(todoId , value + `|0|false`);    
 
     } else {
@@ -84,7 +89,7 @@ function App() {
         let key = localStorage.key(i);
         let item = localStorage.getItem(key);
         let text = item.split('|')[0];
-        let rate = item.split('|')[1];
+        let rate = Number(item.split('|')[1]);
         let done = item.split('|')[2];
         let doneVal = done === 'true'; // Преобразование строки в логическое значение
         initialTodos.push({id: key, text: text, done: doneVal, rate: rate});
@@ -97,45 +102,54 @@ function App() {
   }, []);
 
   todos.sort((a, b) => b.rate - a.rate);
-
   let isHolding = false;
   let holdTimer;
 
-const handleMouseDown = () => {
-  holdTimer = setTimeout(() => {
-      isHolding = true;
-  }, 1000); // 1 секунда
-};
+  // const sortedTodos = [...todos].sort((a, b) => b.rate - a.rate);
 
-const handleMouseUp = (e, id) => {
-  clearTimeout(holdTimer);
-  if (isHolding) {
-    e.currentTarget.nextElementSibling.classList.remove("hidden");
-  } else {
-    e.stopPropagation();
-      toggleTodo(id);
-  }
-  isHolding = false; // Сбрасываем флаг
-};
+  const handleMouseDown = () => {
+    holdTimer = setTimeout(() => {
+        isHolding = true;
+    }, 1000); // 1 секунда
+  };
 
-const handleInputChange = (id, newValue) => {
-  setTodos(todos.map(todo => 
-    todo.id === id ? { ...todo, text: newValue } : todo
-  ));
-};
+  const handleMouseUp = (e, id) => {
+    clearTimeout(holdTimer);
+    if (isHolding) {
+      e.currentTarget.nextElementSibling.classList.remove("hidden");
+    } else {
+      e.stopPropagation();
+        toggleTodo(id);
+    }
+    isHolding = false; // Сбрасываем флаг
+  };
 
-const handleKeyDown = (e, id) => {
-  if (e.key === 'Enter') {
-    e.currentTarget.classList.add('hidden');
-  }
-};
+  const handleInputChange = (id, newValue) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, text: newValue } : todo
+    ));
+  };
 
+  const handleKeyDown = (e, id) => {
+    if (e.key === 'Enter') {
+      e.currentTarget.classList.add('hidden');
+    }
+  };
+
+  const updateTodos = (newTodos) => {
+    console.log('updateTodos:', newTodos);
+    setTodos(newTodos);
+  };
+  
   return (
     <>
     <div className='wrapper'>
       <div className='content-wrapper'>
+      <div className='help'>
+          ?
+        </div> 
         <div className='container'>
-          <Sidebar rates={todos}/>
+          <Sidebar rates={todos} updateTodos={updateTodos} />
         </div> 
         <div className='container'>
           <h1 className='title'>Todo List</h1>
@@ -151,10 +165,10 @@ const handleKeyDown = (e, id) => {
             {
               todos.map(todo => { 
                 return (
-                  <div key={todo.id} style={{width: '100%'}}>
+                  <div key={todo.id} style={{width: '100%'} }>
                     <li className={todo.done === true ? "field todo done" : "field todo"}  
                     onMouseDown={handleMouseDown} onMouseUp={(e) => handleMouseUp(e,todo.id)} 
-                    /*onClick={() => toggleTodo(todo.id)} */>
+                    >
                       <div className={'todoText'}> {todo.text} </div>
                       <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
                         e.stopPropagation();
