@@ -8,6 +8,7 @@ function App() {
   const [allTodos, setAllTodos] = useState(0);
   const [allComplete, SetAllComplete] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const colors = ['#99FF33', '#FFFF33', '#33CCCC', '#0099FF', '#6600FF', '#9900CC', '#FF00FF', '#FF6600', '#FF0066', '#ff3399'];
 
   useEffect(() => {
     console.log('Todos обновлены:', todos);
@@ -141,6 +142,31 @@ function App() {
     setTodos(newTodos);
   };
   
+  const setColorByRate = (rate) => {
+    if (rate < 2) {
+      return colors[0]; 
+    } else if (rate < 4) {
+      return colors[1]; 
+    } else if (rate < 6) {
+      return colors[2]; 
+    } else if (rate < 8) {
+      return colors[3]; 
+    } else if (rate < 10) {
+      return colors[4]; 
+    } else if (rate < 12) {
+      return colors[5]; 
+    } else if (rate < 14) {
+      return colors[6]; 
+    } else if (rate < 16) {
+      return colors[7]; 
+    } else if (rate <= 18) {
+      return colors[8]; 
+    } else {
+      return colors[9]; 
+    }
+
+  };
+
   return (
     <>
     <div className='wrapper'>
@@ -168,8 +194,8 @@ function App() {
                   <div key={todo.id} style={{width: '100%'} }>
                     <li className={todo.done === true ? "field todo done" : "field todo"}  
                     onMouseDown={handleMouseDown} onMouseUp={(e) => handleMouseUp(e,todo.id)} 
-                    >
-                      <div className={'todoText'}> {todo.text} </div>
+                    style={{boxShadow: '2px 2px 10px 0 ' + setColorByRate(todo.rate)} } >
+                      <div className={'todoText'} style={{color: setColorByRate(todo.rate)} }> {todo.text} </div>
                       <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
                         e.stopPropagation();
                         removeTodo(todo.id);

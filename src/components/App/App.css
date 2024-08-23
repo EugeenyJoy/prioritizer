@@ -15,6 +15,7 @@
   text-transform: uppercase;
   font-size: 24px;
   color: #ff3399;
+  text-shadow: 2px -2px #99FF33;;
 }
   
 .todos {
@@ -29,20 +30,6 @@
   justify-content: space-between;
   align-items: center;
 }
-  /*.todo {
-    position: relative;
-    list-style: none;
-    width: 100%;
-    box-shadow: 2px 2px 10px 0 #FF3399;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 20px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    background-color: rgba(240, 248, 255, .94);
-    text-shadow: 0px 0px 1px black;
-
-  }*/
 
 .done {
   text-decoration: line-through;
@@ -86,7 +73,7 @@
   font-size: 20px;
   margin-bottom: 10px;
   cursor: pointer;
-  background-color: rgba(240, 248, 255, .94);
+  background-color: #f0f8fff0;
   text-shadow: 0px 0px 1px black;
   overflow: hidden;
 }
