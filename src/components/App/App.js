@@ -1,15 +1,18 @@
 import { useEffect, useState, React } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import Form from './Form/Form';
 import Sidebar from './Sidebar/Sidebar';
+import HelpPage from './HelpPage/HelpPage';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('home'); 
   const [todos, setTodos] = useState([]);
   const [allTodos, setAllTodos] = useState(0);
   const [allComplete, SetAllComplete] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const colors = ['#99FF33', '#FFFF33', '#33CCCC', '#0099FF', '#6600FF', '#9900CC', '#FF00FF', '#FF6600', '#FF0066', '#ff3399'];
-
+  console.log('currentPage', currentPage);
   useEffect(() => {
     console.log('Todos обновлены:', todos);
     SetAllComplete(todos.filter(todo => todo.done === true).length);
@@ -168,62 +171,74 @@ function App() {
   };
 
   return (
-    <>
+    <Router>
     <div className='wrapper'>
-      <div className='content-wrapper'>
-      <div className='help'>
-          ?
-        </div> 
-        <div className='container'>
-          <Sidebar rates={todos} updateTodos={updateTodos} />
-        </div> 
-        <div className='container'>
-          <h1 className='title'>Todo List</h1>
-          <Form 
-            putTodo={putTodo}
-          />
-          {(todos.length > 0) ? (<div className='btn-container'>
-            <button className='btn' onClick={clearTodos}>Очистить всё</button>
-          </div>) : ''
-          }
-          
-          <ul className='todos'>
-            {
-              todos.map(todo => { 
-                return (
-                  <div key={todo.id} style={{width: '100%'} }>
-                    <li className={todo.done === true ? "field todo done" : "field todo"}  
-                    onMouseDown={handleMouseDown} onMouseUp={(e) => handleMouseUp(e,todo.id)} 
-                    style={{boxShadow: '2px 2px 10px 0 ' + setColorByRate(todo.rate)} } >
-                      <div className={'todoText'} style={{color: setColorByRate(todo.rate)} }> {todo.text} </div>
-                      <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
-                        e.stopPropagation();
-                        removeTodo(todo.id);
-                      }
-                      } />
-                    </li>
-                    <input type='text'  maxLength={45} className={`todoInput field hidden`} value={todo.text} 
-                      onClick={e => {e.stopPropagation();}}
-                      onChange={e => handleInputChange(todo.id, e.target.value)} 
-                      onKeyDown={e => handleKeyDown(e, todo.id)} />
-                  </div>
-                );
-              })
-            }
-            <div className='info field'>
-              <span>Всего: {allTodos} </span>
-              <span>Выполнено: {allComplete} </span>
+      <Routes>
+        <Route path="/" element={
+          <div className='content-wrapper'>
+            <div className='container help'>
+              <Link to="/help" className='help-inner'>?</Link>
+            </div> 
+            <div className='container'>
+              <Sidebar rates={todos} updateTodos={updateTodos} />
+            </div> 
+            <div className='container'>
+              <h1 className='title'>Todo List</h1>
+              <Form 
+                putTodo={putTodo}
+              />
+              {(todos.length > 0) ? (<div className='btn-container'>
+                <button className='btn' onClick={clearTodos}>Очистить всё</button>
+              </div>) : ''
+              }
+              
+              <ul className='todos'>
+                {
+                  todos.map(todo => { 
+                    return (
+                      <div key={todo.id} style={{width: '100%'} }>
+                        <li className={todo.done === true ? "field todo done" : "field todo"}  
+                        onMouseDown={handleMouseDown} onMouseUp={(e) => handleMouseUp(e,todo.id)} 
+                        style={{boxShadow: '2px 2px 10px 0 ' + setColorByRate(todo.rate)} } >
+                          <div className={'todoText'} style={{color: setColorByRate(todo.rate)} }> {todo.text} </div>
+                          <img src='./delete.svg' alt='delete' className='delete' onClick={e => {
+                            e.stopPropagation();
+                            removeTodo(todo.id);
+                          }
+                          } />
+                        </li>
+                        <input type='text'  maxLength={45} className={`todoInput field hidden`} value={todo.text} 
+                          onClick={e => {e.stopPropagation();}}
+                          onChange={e => handleInputChange(todo.id, e.target.value)} 
+                          onKeyDown={e => handleKeyDown(e, todo.id)} />
+                      </div>
+                    );
+                  })
+                }
+                <div className='info field'>
+                  <span>Всего: {allTodos} </span>
+                  <span>Выполнено: {allComplete} </span>
+                </div>
+              </ul>
             </div>
-          </ul>
+          </div>
+        } />
+        <Route path="/help" element={<div className='content-wrapper'>
+          <div className='container '>
+              <Link to="/" style={{fontStyle: 'italic', textDecoration: 'overline '} }>ВЕРНУТЬСЯ</Link>
+            </div>
+            <HelpPage />
+        </div>} />
+          
+      </Routes>
+
+      <footer> 
+        <div className='container'><span>20.08.2024 </span>
+          <a href='https://eugeenyjoy.ru/'> EugeenyJoy</a> 
         </div>
-      </div>
+      </footer>
     </div>
-    <footer> 
-      <div className='container'><span>20.08.2024 </span>
-        <a href='https://eugeenyjoy.ru/'> EugeenyJoy</a> 
-      </div>
-    </footer>
-    </>
+    </Router>
   );
 }
 

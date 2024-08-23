@@ -1,0 +1,17 @@
+.help-page p {
+    font-size: 24px;
+    color: #003333;
+    background: #99ff33;
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.help-page .container {
+    margin-top: 20px;
+}
+
+.help-page .container img {
+    max-width: 100%;
+    border: 5px dashed grey;
+}

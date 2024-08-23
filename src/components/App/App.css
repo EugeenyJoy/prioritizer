@@ -8,7 +8,11 @@
   max-width: 800px;
   margin: 100px auto 0 auto;
 }
-  
+
+a {
+  text-decoration: none;
+} 
+
 .title {
   text-align: center;
   margin-bottom: 10px;
@@ -93,6 +97,19 @@
   height: unset;
 }
 
+.help {
+  display: flex;
+  justify-content: flex-end;
+}
+.help-inner {
+  font-size: 24px;
+  width: 50px;
+  border: 1px solid #99FF33;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+}
+
 footer .container {
   display: flex;
   justify-content: space-around;
@@ -100,11 +117,17 @@ footer .container {
 
 footer a {
   display: block;
-  text-decoration: none;
 }
 
 .hidden {
   display: none;
+}
+
+.help-inner, .field {
+  user-select: none; /* Стандартное свойство */
+  -webkit-user-select: none; /* Для Chrome и Safari */
+  -moz-user-select: none; /* Для Firefox */
+  -ms-user-select: none; /* Для IE и Edge */
 }
 
 @media (min-width: 320px) and (max-width: 522px) { 
