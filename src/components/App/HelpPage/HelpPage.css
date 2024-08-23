@@ -12,6 +12,6 @@
 }
 
 .help-page .container img {
-    max-width: 100%;
+    width: 100%;
     border: 5px dashed grey;
 }
