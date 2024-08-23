@@ -12,9 +12,8 @@ function App() {
   const [allComplete, SetAllComplete] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const colors = ['#99FF33', '#FFFF33', '#33CCCC', '#0099FF', '#6600FF', '#9900CC', '#FF00FF', '#FF6600', '#FF0066', '#ff3399'];
-  console.log('currentPage', currentPage);
+  
   useEffect(() => {
-    console.log('Todos обновлены:', todos);
     SetAllComplete(todos.filter(todo => todo.done === true).length);
   },[todos])
 
@@ -141,7 +140,6 @@ function App() {
   };
 
   const updateTodos = (newTodos) => {
-    console.log('updateTodos:', newTodos);
     setTodos(newTodos);
   };
   
@@ -240,18 +238,6 @@ function App() {
     </div>
     </Router>
   );
-}
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then((registration) => {
-        console.log('Service Worker зарегистрирован с областью:', registration.scope);
-      })
-      .catch((error) => {
-        console.error('Ошибка регистрации Service Worker:', error);
-      });
-  });
 }
 
 export default App;

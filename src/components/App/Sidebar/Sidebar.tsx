@@ -65,8 +65,7 @@ const Sidebar = (props) => {
         }
         
         if (selectedIds2.includes(rate.id)) {
-          let newRate = Math.round((rate - 0.3) * 100) / 100;
-          // console.log('newRate',newRate.toFixed(2));
+          let newRate = Math.round((rate.rate - 0.3) * 100) / 100;
           return { ...rate, rate: newRate < 0 ? 0 : newRate }; 
         }
         return rate; 
