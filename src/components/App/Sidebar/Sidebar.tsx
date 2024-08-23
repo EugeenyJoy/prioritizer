@@ -44,7 +44,7 @@ const Sidebar = (props) => {
       let rate = value.split('|')[1];
       let done = value.split('|')[2];
       
-      localStorage.setItem(id ,  `${text}|${+rate+1}|${done}`);  
+      localStorage.setItem(id ,  `${text}|${+rate >= 20 ? 20 : +rate+1}|${done}`);  
       let selectedIds2 = [...selectedIds];
       for (let selected of selectedIds ) {
         if( selected !== id) {
@@ -61,30 +61,30 @@ const Sidebar = (props) => {
 
       const updatedRates = props.rates.map(rate => {
         if (rate.id === id) {
-          return { ...rate, rate: +rate.rate + 1 }; // Обновляем текущий элемент
+          return { ...rate, rate: +rate.rate >= 20 ? 20 : +rate.rate + 1 }; 
         }
         
         if (selectedIds2.includes(rate.id)) {
-          let newRate = parseFloat(rate.rate) - 0.3;
-          return { ...rate, rate: newRate < 0 ? 0 : newRate }; // Не даем значению стать отрицательным
+          let newRate = Math.round((rate - 0.3) * 100) / 100;
+          // console.log('newRate',newRate.toFixed(2));
+          return { ...rate, rate: newRate < 0 ? 0 : newRate }; 
         }
-        return rate; // Возвращаем остальные элементы без изменений
+        return rate; 
       });
   
-      console.log('Обновленные rates:', updatedRates);
-      props.updateTodos(updatedRates); // Обновляем родительский компонент
+      props.updateTodos(updatedRates); 
     }
   }
 
   const handleReload = () => {
     const newRandomObjects = getRandomObjects(props.rates, 2);
-    setRandomObjects(newRandomObjects); // Обновляем состояние с новыми случайными объектами
+    setRandomObjects(newRandomObjects); 
 };
 
   if (typeof props.rates[0] == 'undefined' || typeof props.rates[1] == 'undefined') {
-    return null; // Если пропсы не переданы, ничего не рендерим
+    return null; 
   }
-  const selectedIds = []; // Массив для хранения выбранных id
+  const selectedIds = []; 
 
 	return (  
 		<div className='sidebar' >
