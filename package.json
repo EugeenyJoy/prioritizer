@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "forever start --spinSleepTime 10000 server.js",
+    "start": "forever start --spinSleepTime 10000 prioServer.js",
     "stop": "forever stop 0"
   },
   "eslintConfig": {

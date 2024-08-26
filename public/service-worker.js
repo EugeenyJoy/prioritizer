@@ -2,9 +2,13 @@ const CACHE_NAME = 'my-app-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/styles.css',
-  '/script.js',
-  // добавьте другие ресурсы, которые нужно кэшировать
+  '/static/css/main.7b18316f.css',
+  '/static/js/main.1d9e31e4.js',
+  '/static/media/background.a8213e53ecc888aecfca.jpg',
+  '/help1.png',
+  '/help2.png',
+  '/help3.png',
+  '/delete.svg',
 ];
 
 // Установка Service Worker
